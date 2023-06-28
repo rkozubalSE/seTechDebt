@@ -48,7 +48,7 @@ const init = () => {
         ".MuiTypography-root"
       )[7].textContent;
       const indicatorDebt = document.createElement("p");
-      indicatorDebt.textContent = `Percentage of tech debt covered: ${Math.trunc(
+      indicatorDebt.textContent = `Percentage covered: ${Math.trunc(
         (techDebtPointsDebt / totalPointsDebt) * 100
       )}%`;
       indicatorDebt.classList.add("plop");
@@ -62,7 +62,7 @@ const init = () => {
         ".MuiTypography-root"
       )[7].textContent;
       const indicatorImprov = document.createElement("p");
-      indicatorImprov.textContent = `Percentage of tech debt/improvment covered: ${Math.trunc(
+      indicatorImprov.textContent = `Percentage covered: ${Math.trunc(
         (techDebtPointsImprov / totalPointsImprov) * 100
       )}%`;
       indicatorImprov.classList.add("plop");
