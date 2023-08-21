@@ -4,8 +4,9 @@ chrome.runtime.onMessage.addListener(function (evt, sender, sendResponse) {
     bootstrap();
   }
 });
+const PAGE_DISPLAYED_INTERVAL = 10000;
 
-const init = () => {
+const init = (interval = 200) => {
   const promise = new Promise((resolve) => {
     var intervalId = setInterval(() => {
       const xpathTechDebt = "//p[text()='Completed tech debt']";
@@ -36,8 +37,11 @@ const init = () => {
             resultTechImprov?.parentElement.parentElement.parentElement
               .parentElement.parentElement,
         });
+        setTimeout(() => {
+          init();
+        }, PAGE_DISPLAYED_INTERVAL);
       }
-    }, 200);
+    }, interval);
   });
   promise.then(({ containerTechDebt, containerTechImprov }) => {
     if (containerTechDebt) {
