@@ -10,6 +10,8 @@ const cssClassName = ".mui-jss-MuiTypography-root";
 const init = (interval = 200) => {
   const promise = new Promise((resolve) => {
     var intervalId = setInterval(() => {
+      const listCategoriesToUpdate = [];
+
       const xpathTechDebt = "//p[text()='Completed tech debt']";
       const xpathTechImprov = "//p[text()='Completed tech debt/improvements']";
       const xpathHotfixes = "//p[text()='Completed deployable tickets']";
@@ -20,6 +22,14 @@ const init = (interval = 200) => {
         XPathResult.FIRST_ORDERED_NODE_TYPE,
         null
       ).singleNodeValue;
+      listCategoriesToUpdate.push({
+        container:
+          resultTechDebt?.parentElement.parentElement.parentElement
+            .parentElement.parentElement,
+        failureRate: 25,
+        indicatorText: "Percentage covered:",
+      });
+
       const resultTechImprov = document.evaluate(
         xpathTechImprov,
         document,
@@ -27,6 +37,14 @@ const init = (interval = 200) => {
         XPathResult.FIRST_ORDERED_NODE_TYPE,
         null
       ).singleNodeValue;
+      listCategoriesToUpdate.push({
+        container:
+          resultTechImprov?.parentElement.parentElement.parentElement
+            .parentElement.parentElement,
+        failureRate: 25,
+        indicatorText: "Percentage covered:",
+      });
+
       const resultHotfixes = document.evaluate(
         xpathHotfixes,
         document,
@@ -34,86 +52,52 @@ const init = (interval = 200) => {
         XPathResult.FIRST_ORDERED_NODE_TYPE,
         null
       ).singleNodeValue;
+      listCategoriesToUpdate.push({
+        container:
+          resultHotfixes?.parentElement.parentElement.parentElement
+            .parentElement.parentElement,
+        failureRate: 10,
+        indicatorText: "Change rate failure:",
+        reverse: true,
+      });
 
       if (!!resultTechDebt || !!resultTechImprov || !!resultHotfixes) {
         prepForRefresh();
         clearInterval(intervalId);
-        resolve({
-          containerTechDebt:
-            resultTechDebt?.parentElement.parentElement.parentElement
-              .parentElement.parentElement,
-          containerTechImprov:
-            resultTechImprov?.parentElement.parentElement.parentElement
-              .parentElement.parentElement,
-          containerHotfixes:
-            resultHotfixes?.parentElement.parentElement.parentElement
-              .parentElement.parentElement,
-        });
+        resolve(listCategoriesToUpdate);
         setTimeout(() => {
           init();
         }, PAGE_DISPLAYED_INTERVAL);
       }
     }, interval);
   });
-  promise.then(
-    ({ containerTechDebt, containerTechImprov, containerHotfixes }) => {
-      if (containerTechDebt) {
-        const failureRate = 25;
-        const totalPointsDebt =
-          containerTechDebt.querySelectorAll(cssClassName)[1].textContent;
-        const techDebtPointsDebt =
-          containerTechDebt.querySelectorAll(cssClassName)[5].textContent;
-        const indicatorDebt = document.createElement("p");
-        const rate = Math.trunc((techDebtPointsDebt / totalPointsDebt) * 100);
-        indicatorDebt.textContent = `Percentage covered: ${rate}%`;
-        indicatorDebt.classList.add("plop");
-        if (rate < failureRate) {
-          indicatorDebt.classList.add("failure");
-        } else {
-          indicatorDebt.classList.add("success");
-        }
-        containerTechDebt.insertAdjacentElement("beforeend", indicatorDebt);
+  promise.then((listCategoriesToUpdate) => {
+    listCategoriesToUpdate.forEach((cat) => {
+      if (!!cat.container) {
+        prepareAndDisplayIndicator(cat);
       }
-      if (containerTechImprov) {
-        const failureRate = 25;
-        const totalPointsImprov =
-          containerTechImprov.querySelectorAll(cssClassName)[1].textContent;
-        const techDebtPointsImprov =
-          containerTechImprov.querySelectorAll(cssClassName)[5].textContent;
-        const indicatorImprov = document.createElement("p");
-        const rate = Math.trunc(
-          (techDebtPointsImprov / totalPointsImprov) * 100
-        );
-        indicatorImprov.textContent = `Percentage covered: ${rate}%`;
-        indicatorImprov.classList.add("plop");
-        if (rate < failureRate) {
-          indicatorImprov.classList.add("failure");
-        } else {
-          indicatorImprov.classList.add("success");
-        }
-        containerTechImprov.insertAdjacentElement("beforeend", indicatorImprov);
-      }
-      if (containerHotfixes) {
-        const failureRate = 10;
-        const totalPointsHotfixes =
-          containerHotfixes.querySelectorAll(cssClassName)[1].textContent;
-        const techDebtPointsHotfixes =
-          containerHotfixes.querySelectorAll(cssClassName)[5].textContent;
-        const indicatorHotfixes = document.createElement("p");
-        const rate = Math.trunc(
-          (totalPointsHotfixes / techDebtPointsHotfixes) * 100
-        );
-        indicatorHotfixes.textContent = `Change rate failure: ${rate}%`;
-        indicatorHotfixes.classList.add("plop");
-        if (rate > failureRate) {
-          indicatorHotfixes.classList.add("failure");
-        } else {
-          indicatorHotfixes.classList.add("success");
-        }
-        containerHotfixes.insertAdjacentElement("beforeend", indicatorHotfixes);
-      }
-    }
-  );
+    });
+  });
+};
+
+const prepareAndDisplayIndicator = (cat) => {
+  const failureRate = cat.failureRate;
+  const totalScore =
+    cat.container.querySelectorAll(cssClassName)[1].textContent;
+  const totalScoreComapare =
+    cat.container.querySelectorAll(cssClassName)[5].textContent;
+  const indicator = document.createElement("p");
+  const rate = cat.reverse
+    ? Math.trunc((totalScore / totalScoreComapare) * 100)
+    : Math.trunc((totalScoreComapare / totalScore) * 100);
+  indicator.textContent = `${cat.indicatorText} ${rate}%`;
+  indicator.classList.add("plop");
+  if (cat.reverse ? rate > failureRate : rate < failureRate) {
+    indicator.classList.add("failure");
+  } else {
+    indicator.classList.add("success");
+  }
+  cat.container.insertAdjacentElement("beforeend", indicator);
 };
 
 const bootstrap = () => {
