@@ -6,6 +6,7 @@ chrome.runtime.onMessage.addListener(function (evt, sender, sendResponse) {
 });
 const PAGE_DISPLAYED_INTERVAL = 10000;
 
+const cssClassName = ".mui-jss-MuiTypography-root";
 const init = (interval = 200) => {
   const promise = new Promise((resolve) => {
     var intervalId = setInterval(() => {
@@ -45,12 +46,10 @@ const init = (interval = 200) => {
   });
   promise.then(({ containerTechDebt, containerTechImprov }) => {
     if (containerTechDebt) {
-      const totalPointsDebt = containerTechDebt.querySelectorAll(
-        ".MuiTypography-root"
-      )[2].textContent;
-      const techDebtPointsDebt = containerTechDebt.querySelectorAll(
-        ".MuiTypography-root"
-      )[7].textContent;
+      const totalPointsDebt =
+        containerTechDebt.querySelectorAll(cssClassName)[1].textContent;
+      const techDebtPointsDebt =
+        containerTechDebt.querySelectorAll(cssClassName)[5].textContent;
       const indicatorDebt = document.createElement("p");
       indicatorDebt.textContent = `Percentage covered: ${Math.trunc(
         (techDebtPointsDebt / totalPointsDebt) * 100
@@ -59,12 +58,10 @@ const init = (interval = 200) => {
       containerTechDebt.insertAdjacentElement("beforeend", indicatorDebt);
     }
     if (containerTechImprov) {
-      const totalPointsImprov = containerTechImprov.querySelectorAll(
-        ".MuiTypography-root"
-      )[2].textContent;
-      const techDebtPointsImprov = containerTechImprov.querySelectorAll(
-        ".MuiTypography-root"
-      )[7].textContent;
+      const totalPointsImprov =
+        containerTechImprov.querySelectorAll(cssClassName)[1].textContent;
+      const techDebtPointsImprov =
+        containerTechImprov.querySelectorAll(cssClassName)[5].textContent;
       const indicatorImprov = document.createElement("p");
       indicatorImprov.textContent = `Percentage covered: ${Math.trunc(
         (techDebtPointsImprov / totalPointsImprov) * 100
