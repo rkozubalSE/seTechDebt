@@ -3,3 +3,11 @@
   font-weight: bold;
   margin-bottom: 16px;
 }
+
+.success {
+  color: green;
+}
+
+.failure {
+  color: orange;
+}
