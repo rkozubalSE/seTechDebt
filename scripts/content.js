@@ -11,7 +11,7 @@ const cssClassName = ".MuiTypography-root";
 let savedData = [];
 chrome.storage.sync.get("results", (items) => {
   savedData = items.results;
-  console.log(123456, savedData);
+  console.log("SavedData", savedData);
 });
 
 const init = (interval = 200) => {
@@ -35,6 +35,7 @@ const init = (interval = 200) => {
           failureRate: mapper.failrate,
           indicatorText: mapper.indicatorText,
           reverse: mapper.reverse,
+          reverseFailrate: mapper.reverseFailrate,
           single: mapper.single,
         });
       });
@@ -51,7 +52,6 @@ const init = (interval = 200) => {
   });
   promise.then((listCategoriesToUpdate) => {
     listCategoriesToUpdate.forEach((cat) => {
-      console.log(cat.container, cat.indicatorText);
       if (!!cat.container) {
         prepareAndDisplayIndicator(cat);
       }
@@ -78,7 +78,7 @@ const prepareAndDisplayIndicator = (cat) => {
     cat.single ? `/${failureRate}` : "%"
   }`;
   indicator.classList.add("plop");
-  if (cat.reverse ? rate > failureRate : rate < failureRate) {
+  if (cat.reverseFailrate ? rate > failureRate : rate < failureRate) {
     indicator.classList.add("failure");
   } else {
     indicator.classList.add("success");

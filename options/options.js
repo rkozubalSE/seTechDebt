@@ -9,13 +9,20 @@ const saveOptions = () => {
   const listMappers = [...document.querySelectorAll(".mapperContainer")];
   const results = [];
   listMappers.forEach((mapper) => {
-    console.log(9);
     const mapperTxt = mapper.querySelector(".mapper").value;
     const failrate = mapper.querySelector(".failrate").value;
     const indicatorText = mapper.querySelector(".indicatorText").value;
     const reverse = mapper.querySelector(".reverse").checked;
+    const reverseFailrate = mapper.querySelector(".reverseFailrate").checked;
     const single = mapper.querySelector(".single").checked;
-    results.push({ mapperTxt, failrate, indicatorText, reverse, single });
+    results.push({
+      mapperTxt,
+      failrate,
+      indicatorText,
+      reverse,
+      reverseFailrate,
+      single,
+    });
   });
 
   chrome.storage.sync.set({ results }, () => {
@@ -39,6 +46,8 @@ const restoreOptions = () => {
         newNode.querySelector(".failrate").value = mapper.failrate;
         newNode.querySelector(".indicatorText").value = mapper.indicatorText;
         newNode.querySelector(".reverse").checked = mapper.reverse;
+        newNode.querySelector(".reverseFailrate").checked =
+          mapper.reverseFailrate;
         newNode.querySelector(".single").checked = mapper.single;
         container.append(newNode);
       });
