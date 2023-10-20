@@ -1,8 +1,12 @@
 {
     "manifest_version": 3,
-    "name": "Tech debt/improvment blance",
+    "name": "Plandek SE extension",
+    "options_ui": {
+        "page": "options/options.html",
+        "open_in_tab": false
+    },
     "version": "1.0",
-    "description": "Displays the techdebt/tech improvements percentage",
+    "description": "Displays additional indicators for plandek",
     "background": {
         "service_worker": "scripts/background.js"
     },
@@ -28,6 +32,7 @@
         }
     ],
     "permissions": [
-        "tabs"
+        "tabs",
+        "storage"
     ]
 }

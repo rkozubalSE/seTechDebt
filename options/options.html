@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Plandek SE extension</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="mapperContainer">
+        <div>
+          <label>
+            Mapper to use:
+            <input
+              class="mapper"
+              type="text"
+              placeholder="Completed tech debt"
+            />
+          </label>
+        </div>
+        <div>
+          <label>
+            Fail rate:
+            <input class="failrate" type="number" placeholder="10" />
+          </label>
+        </div>
+        <div>
+          <label>
+            Indicator label:
+            <input
+              class="indicatorText"
+              type="text"
+              placeholder="Percentage covered"
+            />
+          </label>
+        </div>
+        <div>
+          <label> Reverse: <input type="checkbox" class="reverse" /> </label>
+        </div>
+        <div>
+          <label>
+            Single Value: <input type="checkbox" class="single" />
+          </label>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top: 10px">
+      <button id="add">Add additional Mapper</button>
+      <div id="status"></div>
+      <button id="save">Save</button>
+      <button id="reset">Reset</button>
+    </div>
+
+    <script src="options.js"></script>
+  </body>
+</html>
