@@ -6,7 +6,7 @@ chrome.runtime.onMessage.addListener(function (evt, sender, sendResponse) {
 });
 const PAGE_DISPLAYED_INTERVAL = 2000;
 
-const cssClassName = ".MuiTypography-root";
+const cssClassName = "h2";
 
 let savedData = [];
 chrome.storage.sync.get("results", (items) => {
@@ -64,12 +64,12 @@ const prepareAndDisplayIndicator = (cat) => {
   const failureRate = cat.failureRate;
   let rate;
   const totalScore =
-    cat.container.querySelectorAll(cssClassName)[2].textContent;
+    cat.container.querySelectorAll(cssClassName)[0].textContent;
   if (cat.single) {
     rate = totalScore;
   } else {
     const totalScoreComapare =
-      cat.container.querySelectorAll(cssClassName)[7].textContent;
+      cat.container.querySelectorAll(cssClassName)[1].textContent;
     rate = cat.reverse
       ? Math.trunc((totalScore / totalScoreComapare) * 100)
       : Math.trunc((totalScoreComapare / totalScore) * 100);
